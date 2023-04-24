@@ -1,6 +1,5 @@
 local cc = require("neo-tree.sources.common.commands")
 local manager = require("neo-tree.sources.manager")
-local vim = vim
 
 local M = {}
 
@@ -87,7 +86,7 @@ M.add = function(state)
 				local map = array_to_tree(data)
 				root = parse_tree(map, 'root', 'workspace symbols')
 			end
-			state.symboltree = { root }
+			vim.tbl_deep_extend('force', state.symboltree, { root })
 			manager.refresh("symbolmap")
 		end)
 		state.symboltree = { {
@@ -98,6 +97,11 @@ M.add = function(state)
 		} }
 		manager.refresh("symbolmap")
 	end)
+end
+
+M.delete = function(state)
+	state.symboltree = { }
+	manager.refresh("symbolmap")
 end
 
 cc._add_common_commands(M)
