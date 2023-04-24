@@ -72,6 +72,16 @@ local function find_last_buffer()
 	return 0
 end
 
+-- https://stackoverflow.com/questions/1410862/concatenation-of-tables-in-lua
+-- vim.tbl_extend overwrites values assuming position in array is its key
+function TableConcat(t1,t2)
+	for i=1,#t2 do
+		t1[#t1+1] = t2[i]
+	end
+	return t1
+end
+
+
 M.add = function(state)
 	vim.ui.input({ prompt = "query" }, function(input)
 		local buf = find_last_buffer()
@@ -81,12 +91,18 @@ M.add = function(state)
 				local root = parse_tree(map, 'root', 'workspace symbols')
 				local prev_root = state.symboltree[1]
 				if prev_root ~= nil then
-					root.children = vim.tbl_flatten({ prev_root.children, root.children})
+					root.children = TableConcat(prev_root.children, root.children)
 				end
 				state.symboltree = { root }
 			end
 			manager.refresh("symbolmap")
 		end)
+		state.symboltree = { {
+			id = 'root',
+			name = 'querying LS...',
+			type = 'directory',
+			children = { }
+		} }
 	end)
 end
 

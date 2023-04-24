@@ -9,7 +9,12 @@ M.navigate = function(state, path)
 	state.path = path
 
 	if state.symboltree == nil then
-		state.symboltree = { }
+		state.symboltree = { {
+			id = 'root',
+			name = "use 'a' to query LS",
+			type = 'directory',
+			children = { }
+		} }
 	end
 
 	renderer.show_nodes(state.symboltree, state)
