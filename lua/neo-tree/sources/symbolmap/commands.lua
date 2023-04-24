@@ -85,7 +85,7 @@ M.add = function(state)
 			if data ~= nil then
 				local map = array_to_tree(data)
 				root = parse_tree(map, 'root', 'workspace symbols')
-				vim.tbl_deep_extend('force', state.symboltree, { root })
+				state.symboltree = vim.tbl_deep_extend('force', state.symboltree, { root })
 			end
 			manager.refresh("symbolmap")
 		end)
