@@ -76,16 +76,13 @@ M.add = function(state)
 	vim.ui.input({ prompt = "query" }, function(input)
 		local buf = find_last_buffer()
 		vim.lsp.buf_request(buf, 'workspace/symbol', { query = input }, function(err, data, _, _)
-			local root = {
-				id = "root",
-				name = "workspace symbols",
-				type = "directory",
-				children = {}
-			}
 			if data ~= nil then
 				local map = array_to_tree(data)
-				root = parse_tree(map, 'root', 'workspace symbols')
-				root.children = vim.tbl_deep_extend('force', state.symboltree.children, root.children)
+				local root = parse_tree(map, 'root', 'workspace symbols')
+				local prev_root = state.symboltree[1]
+				if prev_root ~= nil then
+					root.children = vim.tbl_deep_extend('force', prev_root.children, root.children)
+				end
 				state.symboltree = { root }
 			end
 			manager.refresh("symbolmap")
