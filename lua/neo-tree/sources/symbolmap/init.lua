@@ -11,9 +11,14 @@ M.navigate = function(state, path)
 	if state.symboltree == nil then
 		state.symboltree = { {
 			id = 'root',
-			name = "use 'a' to query LS",
+			name = 'workspace symbols',
 			type = 'directory',
-			children = { }
+			children = { {
+				id = 'root.help',
+				name = "use 'a' to query LS",
+				type = 'module',
+				children = { }
+			} }
 		} }
 	end
 

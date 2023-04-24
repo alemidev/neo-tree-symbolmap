@@ -103,7 +103,12 @@ end
 M.delete = function(state)
 	vim.ui.input({ prompt = "clear symbol tree? (y/n)" }, function(input)
 		if input == 'y' or input == 'Y' then
-			state.symboltree = { }
+			state.symboltree = { {
+				id = 'root',
+				name = 'workspace symbols',
+				type = 'directory',
+				children = { }
+			} }
 			manager.refresh("symbolmap")
 		end
 	end)
