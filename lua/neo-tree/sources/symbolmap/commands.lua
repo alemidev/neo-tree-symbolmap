@@ -7,6 +7,15 @@ local function kind_to_str(kind)
 	return string.format("%s", vim.lsp.protocol.SymbolKind[kind])
 end
 
+-- https://stackoverflow.com/questions/1410862/concatenation-of-tables-in-lua
+-- vim.tbl_extend overwrites values assuming position in array is its key
+function TableConcat(t1,t2)
+	for i=1,#t2 do
+		t1[#t1+1] = t2[i]
+	end
+	return t1
+end
+
 local function parse_tree(tree, id, name)
 	if tree.name ~= nil then
 		return {
@@ -42,8 +51,14 @@ local function array_to_tree(array)
 	local root = {}
 	for _, node in pairs(array) do
 		local fragments = {}
+		local name = node.name
 		if node.containerName ~= nil then
 			fragments = vim.fn.split(node.containerName, "\\.")
+		end
+		if #vim.fn.split(name,"\\.") then
+			local extra_frags = vim.fn.split(name, "\\.")
+			name = table.remove(extra_frags, #extra_frags)
+			fragments = TableConcat(fragments, extra_frags)
 		end
 		local target = root
 		for _, x in pairs(fragments) do
@@ -52,7 +67,7 @@ local function array_to_tree(array)
 			end
 			target = target[x]
 		end
-		target[node.name] = node
+		target[name] = node
 	end
 	return root
 end
@@ -71,16 +86,6 @@ local function find_last_buffer()
 	end
 	return 0
 end
-
--- https://stackoverflow.com/questions/1410862/concatenation-of-tables-in-lua
--- vim.tbl_extend overwrites values assuming position in array is its key
-function TableConcat(t1,t2)
-	for i=1,#t2 do
-		t1[#t1+1] = t2[i]
-	end
-	return t1
-end
-
 
 M.add = function(state)
 	vim.ui.input({ prompt = "query" }, function(input)
