@@ -81,7 +81,7 @@ M.add = function(state)
 				local root = parse_tree(map, 'root', 'workspace symbols')
 				local prev_root = state.symboltree[1]
 				if prev_root ~= nil then
-					root.children = vim.tbl_deep_extend('force', prev_root.children, root.children)
+					root.children = vim.tbl_flatten({ prev_root.children, root.children})
 				end
 				state.symboltree = { root }
 			end
