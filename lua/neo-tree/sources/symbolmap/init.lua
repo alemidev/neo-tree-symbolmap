@@ -13,12 +13,7 @@ M.navigate = function(state, path)
 			id = 'root',
 			name = 'workspace symbols',
 			type = 'directory',
-			children = { {
-				id = 'root.help',
-				name = "use 'a' to query LS",
-				type = 'module',
-				children = { }
-			} }
+			children = { }
 		} }
 	end
 
