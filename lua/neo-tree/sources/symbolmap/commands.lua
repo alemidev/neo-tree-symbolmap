@@ -97,12 +97,6 @@ M.add = function(state)
 			end
 			manager.refresh("symbolmap")
 		end)
-		state.symboltree = { {
-			id = 'root',
-			name = 'querying LS...',
-			type = 'directory',
-			children = { }
-		} }
 	end)
 end
 
