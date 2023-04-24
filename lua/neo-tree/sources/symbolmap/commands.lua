@@ -85,17 +85,10 @@ M.add = function(state)
 			if data ~= nil then
 				local map = array_to_tree(data)
 				root = parse_tree(map, 'root', 'workspace symbols')
+				vim.tbl_deep_extend('force', state.symboltree, { root })
 			end
-			vim.tbl_deep_extend('force', state.symboltree, { root })
 			manager.refresh("symbolmap")
 		end)
-		state.symboltree = { {
-			id = "root",
-			name = "reloading symbols ...",
-			type = "directory",
-			children = {}
-		} }
-		manager.refresh("symbolmap")
 	end)
 end
 
