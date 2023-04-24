@@ -85,7 +85,8 @@ M.add = function(state)
 			if data ~= nil then
 				local map = array_to_tree(data)
 				root = parse_tree(map, 'root', 'workspace symbols')
-				state.symboltree = vim.tbl_deep_extend('force', state.symboltree, { root })
+				root.children = vim.tbl_deep_extend('force', state.symboltree.children, root.children)
+				state.symboltree = { root }
 			end
 			manager.refresh("symbolmap")
 		end)
@@ -93,8 +94,12 @@ M.add = function(state)
 end
 
 M.delete = function(state)
-	state.symboltree = { }
-	manager.refresh("symbolmap")
+	vim.ui.input({ prompt = "clear symbol tree? (y/n)" }, function(input)
+		if input == 'y' or input == 'Y' then
+			state.symboltree = { }
+			manager.refresh("symbolmap")
+		end
+	end)
 end
 
 cc._add_common_commands(M)
