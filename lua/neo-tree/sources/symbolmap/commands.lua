@@ -51,14 +51,8 @@ local function array_to_tree(array)
 	local root = {}
 	for _, node in pairs(array) do
 		local fragments = {}
-		local name = node.name
 		if node.containerName ~= nil then
 			fragments = vim.fn.split(node.containerName, "\\.")
-		end
-		if #vim.fn.split(name,"\\.") then
-			local extra_frags = vim.fn.split(name, "\\.")
-			name = table.remove(extra_frags, #extra_frags)
-			fragments = TableConcat(fragments, extra_frags)
 		end
 		local target = root
 		for _, x in pairs(fragments) do
@@ -67,7 +61,7 @@ local function array_to_tree(array)
 			end
 			target = target[x]
 		end
-		target[name] = node
+		target[node.name] = node
 	end
 	return root
 end
